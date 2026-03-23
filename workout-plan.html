@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>תוכנית אימונים | Full Body 3x/Week</title>
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --card: #1e1e1e;
+    --card-hover: #252525;
+    --accent: #ff5722;
+    --accent2: #ff8a50;
+    --accent-glow: rgba(255, 87, 34, 0.15);
+    --text: #f0f0f0;
+    --muted: #888;
+    --border: #2a2a2a;
+    --warning: #ffa726;
+    --warning-bg: rgba(255, 167, 38, 0.1);
+    --danger: #ef5350;
+    --danger-bg: rgba(239, 83, 80, 0.1);
+    --success: #66bb6a;
+    --success-bg: rgba(102, 187, 106, 0.1);
+    --blue: #42a5f5;
+    --blue-bg: rgba(66, 165, 245, 0.1);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, #1a0a00 0%, #0d0d0d 50%, #0a0a1a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 24px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(20px);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+  }
+
+  .header h1 span {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--muted);
+    -webkit-text-fill-color: var(--muted);
+    background: none;
+    margin-top: 2px;
+  }
+
+  .chips {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .chip {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .chip-orange { background: var(--accent-glow); color: var(--accent2); border: 1px solid rgba(255,87,34,0.3); }
+  .chip-yellow { background: var(--warning-bg); color: var(--warning); border: 1px solid rgba(255,167,38,0.3); }
+  .chip-red    { background: var(--danger-bg);  color: var(--danger);  border: 1px solid rgba(239,83,80,0.3); }
+  .chip-blue   { background: var(--blue-bg);    color: var(--blue);    border: 1px solid rgba(66,165,245,0.3); }
+
+  /* ===== TABS ===== */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 4px;
+    margin: 0 16px 20px;
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 10px 8px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    direction: rtl;
+  }
+
+  .tab-btn .tab-day { font-size: 1rem; display: block; }
+  .tab-btn .tab-label { font-size: 0.65rem; opacity: 0.7; margin-top: 1px; display: block; }
+
+  .tab-btn:hover { color: var(--text); background: var(--card); }
+  .tab-btn.active {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 2px 12px rgba(255, 87, 34, 0.4);
+  }
+  .tab-btn.active .tab-label { opacity: 0.85; }
+
+  /* ===== WORKOUT SECTIONS ===== */
+  .workout-section { display: none; padding: 0 16px 100px; }
+  .workout-section.active { display: block; }
+
+  .section-header {
+    background: linear-gradient(135deg, var(--card), var(--surface));
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .section-icon {
+    width: 44px; height: 44px;
+    background: var(--accent-glow);
+    border: 1px solid rgba(255,87,34,0.3);
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  .section-info h2 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
+  .section-info p  { font-size: 0.75rem; color: var(--muted); }
+
+  /* ===== SUPERSET GROUP ===== */
+  .superset-group {
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .superset-label {
+    background: var(--surface);
+    padding: 6px 16px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .superset-label::before {
+    content: '';
+    width: 3px; height: 14px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  /* ===== EXERCISE CARD ===== */
+  .exercise-card {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+
+  .exercise-card:last-child { border-bottom: none; }
+  .exercise-card:hover { background: var(--card-hover); }
+
+  .exercise-header {
+    padding: 14px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    user-select: none;
+  }
+
+  .exercise-num {
+    width: 28px; height: 28px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .exercise-main { flex: 1; min-width: 0; }
+
+  .exercise-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .exercise-name-en {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-weight: 400;
+    word-break: break-word;
+  }
+
+  .exercise-meta {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.65rem;
+    font-weight: 700;
+  }
+
+  .badge-sets  { background: var(--accent-glow); color: var(--accent2); }
+  .badge-muscle { background: var(--blue-bg); color: var(--blue); }
+  .badge-warn  { background: var(--warning-bg); color: var(--warning); }
+  .badge-elbow { background: var(--danger-bg); color: var(--danger); }
+  .badge-light { background: var(--success-bg); color: var(--success); }
+
+  /* ===== SET TRACKER ===== */
+  .set-tracker {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .set-dot {
+    width: 22px; height: 22px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.6rem;
+    color: transparent;
+  }
+
+  .set-dot:hover { border-color: var(--accent); }
+
+  .set-dot.done {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+    box-shadow: 0 0 8px rgba(255,87,34,0.4);
+  }
+
+  .chevron {
+    color: var(--muted);
+    font-size: 0.7rem;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    margin-right: 4px;
+  }
+
+  .exercise-card.open .chevron { transform: rotate(180deg); }
+
+  /* ===== EXERCISE DETAIL ===== */
+  .exercise-detail {
+    display: none;
+    padding: 0 16px 16px;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .exercise-card.open .exercise-detail { display: block; }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 14px;
+    margin-top: 14px;
+    align-items: start;
+  }
+
+  .cues-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .cues-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .cues-list li {
+    font-size: 0.8rem;
+    color: #ccc;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    line-height: 1.4;
+  }
+
+  .cues-list li::before {
+    content: '›';
+    color: var(--accent);
+    font-size: 1rem;
+    line-height: 1.2;
+    flex-shrink: 0;
+  }
+
+  .warn-box {
+    margin-top: 10px;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    line-height: 1.4;
+  }
+
+  .warn-box.back  { background: var(--warning-bg); color: var(--warning); border: 1px solid rgba(255,167,38,0.2); }
+  .warn-box.elbow { background: var(--danger-bg);  color: var(--danger);  border: 1px solid rgba(239,83,80,0.2); }
+  .warn-box.light { background: var(--success-bg); color: var(--success); border: 1px solid rgba(102,187,106,0.2); }
+
+  .demo-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    background: #1a0800;
+    border: 1px solid rgba(255,87,34,0.3);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    text-decoration: none;
+    color: var(--accent2);
+    font-size: 0.65rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .demo-btn:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    transform: scale(1.03);
+    box-shadow: 0 4px 16px rgba(255,87,34,0.35);
+  }
+
+  .demo-btn .play-icon {
+    width: 32px; height: 32px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+  }
+
+  /* ===== CARDIO CARD ===== */
+  .cardio-card {
+    background: linear-gradient(135deg, #0a1628, #0d1a1a);
+    border: 1px solid #1e3a3a;
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .cardio-icon {
+    width: 40px; height: 40px;
+    background: rgba(66,165,245,0.15);
+    border: 1px solid rgba(66,165,245,0.3);
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .cardio-info h4 { font-size: 0.85rem; color: var(--blue); margin-bottom: 3px; }
+  .cardio-info p  { font-size: 0.72rem; color: var(--muted); }
+
+  /* ===== CIRCUIT CARD ===== */
+  .circuit-info {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .circuit-info strong { color: var(--accent2); }
+
+  /* ===== REST TIMER ===== */
+  .timer-fab {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .timer-btn {
+    width: 60px; height: 60px;
+    background: var(--accent);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(255,87,34,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .timer-btn:hover { transform: scale(1.08); }
+  .timer-btn:active { transform: scale(0.95); }
+
+  .timer-display {
+    font-size: 1.1rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .timer-label-text { font-size: 0.55rem; opacity: 0.85; }
+
+  .timer-ring {
+    position: absolute;
+    top: 0; left: 0;
+    width: 60px; height: 60px;
+    transform: rotate(-90deg);
+  }
+
+  .timer-ring-circle {
+    fill: none;
+    stroke: rgba(255,255,255,0.35);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dasharray: 175;
+    stroke-dashoffset: 175;
+    transition: stroke-dashoffset 1s linear;
+  }
+
+  .timer-ring-circle.running { stroke: white; }
+
+  .timer-hint {
+    font-size: 0.6rem;
+    color: var(--muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 3px 8px;
+    white-space: nowrap;
+  }
+
+  /* ===== PROGRESS OVERVIEW ===== */
+  .workout-progress {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .progress-text {
+    font-size: 0.72rem;
+    color: var(--muted);
+    min-width: 80px;
+  }
+
+  .progress-bar-wrap {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 3px;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+
+  .progress-pct {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent2);
+    min-width: 30px;
+    text-align: left;
+  }
+
+  /* ===== NOTES BOX ===== */
+  .notes-box {
+    background: linear-gradient(135deg, #0d0d1a, #0a0a0d);
+    border: 1px solid #2a2a4a;
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+
+  .notes-title {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #7986cb;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .notes-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .notes-list li {
+    font-size: 0.75rem;
+    color: #9fa8da;
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+  }
+
+  .notes-list li::before {
+    content: '•';
+    color: #5c6bc0;
+    flex-shrink: 0;
+  }
+
+  /* ===== ELBOW WARM-UP BOX ===== */
+  .warmup-box {
+    background: var(--danger-bg);
+    border: 1px solid rgba(239,83,80,0.2);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+
+  .warmup-box h3 { font-size: 0.75rem; font-weight: 700; color: var(--danger); margin-bottom: 8px; }
+  .warmup-box li { font-size: 0.75rem; color: #ffcdd2; margin-right: 14px; margin-bottom: 4px; line-height: 1.4; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+
+    /* Header */
+    .header { padding: 16px 14px 12px; }
+    .header h1 { font-size: 1.15rem; }
+    .header-top { gap: 8px; margin-bottom: 10px; }
+    .chips { gap: 4px; }
+    .chip { font-size: 0.62rem; padding: 3px 8px; }
+
+    /* Tabs */
+    .tabs { margin: 0 10px 14px; padding: 3px; gap: 3px; }
+    .tab-btn { padding: 9px 4px; }
+    .tab-btn .tab-day { font-size: 0.95rem; }
+    .tab-btn .tab-label { font-size: 0.58rem; }
+
+    /* Section */
+    .workout-section { padding: 0 10px 100px; }
+    .section-header { padding: 12px 14px; gap: 10px; }
+    .section-info h2 { font-size: 0.85rem; }
+    .section-info p { font-size: 0.68rem; }
+    .section-icon { width: 38px; height: 38px; font-size: 1.1rem; }
+
+    /* Superset label */
+    .superset-label { font-size: 0.62rem; padding: 5px 12px; letter-spacing: 0.5px; white-space: normal; }
+
+    /* Exercise card header — stack name on top, controls on bottom */
+    .exercise-header {
+      padding: 12px 12px;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+
+    .exercise-num { width: 26px; height: 26px; font-size: 0.65rem; margin-top: 2px; }
+
+    .exercise-main { flex: 1; min-width: 0; }
+
+    .exercise-name { font-size: 0.82rem; gap: 4px; }
+
+    .exercise-name-en {
+      display: block;
+      font-size: 0.68rem;
+      margin-top: 1px;
+    }
+
+    .exercise-meta { gap: 4px; margin-top: 4px; }
+    .badge { font-size: 0.6rem; padding: 2px 6px; }
+
+    /* Move set tracker to its own row below */
+    .set-tracker {
+      flex-basis: 100%;
+      margin-right: 34px;
+      margin-top: 6px;
+      gap: 8px;
+    }
+
+    /* Bigger tap targets for dots */
+    .set-dot {
+      width: 30px;
+      height: 30px;
+      font-size: 0.75rem;
+    }
+
+    .chevron { align-self: flex-start; margin-top: 4px; }
+
+    /* Exercise detail */
+    .exercise-detail { padding: 0 12px 14px; }
+    .detail-grid { grid-template-columns: 1fr; gap: 12px; }
+    .cues-list li { font-size: 0.78rem; }
+
+    /* Demo button — horizontal on mobile */
+    .demo-btn {
+      flex-direction: row;
+      padding: 10px 14px;
+      gap: 8px;
+      width: 100%;
+      justify-content: center;
+    }
+    .demo-btn .play-icon { width: 28px; height: 28px; font-size: 0.8rem; }
+
+    /* Warn boxes */
+    .warn-box { font-size: 0.72rem; padding: 7px 9px; }
+
+    /* Cardio */
+    .cardio-card { padding: 12px 14px; gap: 10px; }
+    .cardio-icon { width: 36px; height: 36px; font-size: 1.1rem; }
+    .cardio-info h4 { font-size: 0.8rem; }
+    .cardio-info p { font-size: 0.68rem; }
+
+    /* Progress */
+    .workout-progress { padding: 10px 12px; }
+    .progress-text { font-size: 0.68rem; min-width: 60px; }
+
+    /* Notes */
+    .notes-box { padding: 12px 14px; }
+    .notes-list li { font-size: 0.72rem; }
+    .warmup-box li { font-size: 0.72rem; }
+    .warmup-box h3 { font-size: 0.72rem; }
+
+    /* Timer */
+    .timer-fab { bottom: 18px; left: 16px; }
+    .timer-btn { width: 54px; height: 54px; }
+    .timer-ring { width: 54px; height: 54px; }
+    .timer-display { font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>תוכנית אימונים Full Body
+        <span>3 אימונים בשבוע | יום א׳ · ג׳ · ה׳</span>
+      </h1>
+    </div>
+    <div class="chips">
+      <span class="chip chip-orange">ירידה בשומן</span>
+      <span class="chip chip-blue">100+ ק"ג</span>
+      <span class="chip chip-yellow">גב תחתון</span>
+      <span class="chip chip-red">מרפק טניס</span>
+    </div>
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<div style="padding: 16px 16px 0;">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('a')">
+      <span class="tab-day">A</span>
+      <span class="tab-label">רגליים + גב עליון</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('b')">
+      <span class="tab-day">B</span>
+      <span class="tab-label">גלוטאוס + חזה + כתפיים</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('c')">
+      <span class="tab-day">C</span>
+      <span class="tab-label">Full Body Circuit</span>
+    </button>
+  </div>
+</div>
+
+
+<!-- ==================== WORKOUT A ==================== -->
+<div id="workout-a" class="workout-section active">
+
+  <div class="section-header">
+    <div class="section-icon">&#x1F9B5;</div>
+    <div class="section-info">
+      <h2>אימון A — Legs (Quad Focus) + Upper Back</h2>
+      <p>3 Supersets | ~35 דקות כוח + 10 דקות קרדיו</p>
+    </div>
+  </div>
+
+  <div class="warmup-box">
+    <h3>&#x26A0;&#xFE0F; חימום מרפק לפני האימון</h3>
+    <ul>
+      <li>10 סיבובי פרק כף יד בכל כיוון (כל יד)</li>
+      <li>מתיחת Forearm Extensor: יד ישרה קדימה, כף יד למטה, משוך בעדינות 30 שניות כל יד</li>
+      <li>5 דקות הליכון בקצב קל לחמם את הגוף</li>
+    </ul>
+  </div>
+
+  <div class="workout-progress">
+    <span class="progress-text">התקדמות:</span>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="prog-a"></div>
+    </div>
+    <span class="progress-pct" id="prog-a-txt">0%</span>
+  </div>
+
+  <!-- SUPERSET 1 -->
+  <div class="superset-group">
+    <div class="superset-label">Superset 1 — מנוחה 60–75 שניות אחרי שני התרגילים</div>
+
+    <div class="exercise-card" id="card-a1">
+      <div class="exercise-header" onclick="toggleCard('card-a1')">
+        <div class="exercise-num">1A</div>
+        <div class="exercise-main">
+          <div class="exercise-name">
+            לחיצת רגליים
+            <span class="exercise-name-en">Leg Press (Machine)</span>
+          </div>
+          <div class="exercise-meta">
+            <span class="badge badge-sets">3 × 15</span>
+            <span class="badge badge-muscle">Quads · Glutes</span>
+          </div>
+        </div>
+        <div class="set-tracker" id="sets-a1" data-total="3"></div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exercise-detail">
+        <div class="detail-grid">
+          <div>
+            <div class="cues-title">דגשים לביצוע</div>
+            <ul class="cues-list">
+              <li>כפות הרגליים ברוחב כתפיים, מאוזנות על הפלטפורמה</li>
+              <li>לרדת לאט עד זווית ~90° בברך — לא לנגוע בישבן לפלטפורמה</li>
+              <li><strong>לא לנעול ברכיים</strong> בלחיצה — לעצור 5° לפני ישר</li>
+              <li>גב מלא על המשענת לאורך כל התנועה</li>
+              <li>נשיפה בזמן הלחיצה, שאיפה בירידה</li>
+            </ul>
+            <div class="warn-box back">&#x26A0;&#xFE0F; גב תחתון: ברגליים גבוהות יותר על הפלטפורמה — פחות עומס על מותניים</div>
+          </div>
+          <a href="https://www.youtube.com/results?search_query=leg+press+machine+proper+form+tutorial" target="_blank" class="demo-btn">
+            <div class="play-icon">&#9654;</div>
+            Watch Demo
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="card-a2">
+      <div class="exercise-header" onclick="toggleCard('card-a2')">
+        <div class="exercise-num">1B</div>
+        <div class="exercise-main">
+          <div class="exercise-name">
+            חתירה בכבל (V-bar)
+            <span class="exercise-name-en">Seated Cable Row — Neutral Grip</span>
+          </div>
+          <div class="exercise-meta">
+            <span class="badge badge-sets">3 × 12</span>
+            <span class="badge badge-muscle">Back · Rhomboids</span>
+            <span class="badge badge-elbow">V-bar בלבד</span>
+          </div>
+        </div>
+        <div class="set-tracker" id="sets-a2" data-total="3"></div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exercise-detail">
+        <div class="detail-grid">
+          <div>
+            <div class="cues-title">דגשים לביצוע</div>
+            <ul class="cues-list">
+              <li>לשבת זקוף — <strong>לא להתרסק קדימה</strong> בתחילת התנועה</li>
+              <li>למשוך את המרפקים ישר לאחור לגוף</li>
+              <li>לסגור את השכמות בנקודת הסיום — להחזיק שנייה</li>
+              <li>לחזור לאמה מבוקרת — 2–3 שניות — לא לתת לכבל למשוך</li>
+            </ul>
+            <div class="warn-box elbow">&#x1F9B6; מרפק טניס: V-bar בלבד! מוט ישר רחב = לחץ על גיד המרפק</div>
+          </div>
+          <a href="https://www.youtube.com/results?search_query=seated+cable+row+v+bar+neutral+grip+form" target="_blank" class="demo-btn">
+            <div class="play-icon">&#9654;</div>
+            Watch Demo
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUPERSET 2 -->
+  <div class="superset-group">
+    <div class="superset-label">Superset 2 — מנוחה 60–75 שניות אחרי שני התרגילים</div>
+
+    <div class="exercise-card" id="card-a3">
+      <div class="exercise-header" onclick="toggleCard('card-a3')">
+        <div class="exercise-num">2A</div>
+        <div class="exercise-main">
+          <div class="exercise-name">
+            סקוואט גביע
+            <span class="exercise-name-en">Goblet Squat (Dumbbell)</span>
+          </div>
+          <div class="exercise-meta">
+            <span class="badge badge-sets">3 × 12</span>
+            <span class="badge badge-muscle">Quads · Core</span>
+            <span class="badge badge-elbow">אחיזה בצדדים</span>
+          </div>
+        </div>
+        <div class="set-tracker" id="sets-a3" data-total="3"></div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exercise-detail">
+        <div class="detail-grid">
+          <div>
+            <div class="cues-title">דגשים לביצוע</div>
+            <ul class="cues-list">
+              <li>להחזיק דמבל <strong>בצדדיו</strong> (לא לעטוף עם כפות ידיים) — מפחית עומס על מרפק</li>
+              <li>רגליים ברוחב כתפיים, אצבעות כ-30° החוצה</li>
+              <li>לרדת מבוקר עד מתחת למקביל, גב ישר לאורך כל הדרך</li>
+              <li>הברכיים תמיד בכיוון האצבעות — לא להתמוטט פנימה</li>
+              <li>לדחוף דרך העקבים בעלייה</li>
+            </ul>
+            <div class="warn-box elbow">&#x1F9B6; מרפק טניס: לאחוז בצדדי הדמבל, לא לעטוף — מונע כיפוף מרפק תחת עומס</div>
+          </div>
+          <a href="https://www.youtube.com/results?search_query=goblet+squat+dumbbell+proper+form+tutorial" target="_blank" class="demo-btn">
+            <div class="play-icon">&#9654;</div>
+            Watch Demo
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="card-a4">
+      <div class="exercise-header" onclick="toggleCard('card-a4')">
+        <div class="exercise-num">2B</div>
+        <div class="exercise-main">
+          <div class="exercise-name">
+            משיכת כבל לחזה (אחיזה סגורה)
+            <span class="exercise-name-en">Lat Pulldown — Close/Neutral Grip</span>
+          </div>
+          <div class="exercise-meta">
+            <span class="badge badge-sets">3 × 12</span>
+            <span class="badge badge-muscle">Lats · Biceps</span>
+            <span class="badge badge-elbow">אחיזה ניטרלית</span>
+          </div>
+        </div>
+        <div class="set-tracker" id="sets-a4" data-total="3"></div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exercise-detail">
+        <div class="detail-grid">
+          <div>
+            <div class="cues-title">דגשים לביצוע</div>
+            <ul class="cues-list">
+              <li>לשבת זקוף, ירכיים מוחזקות מתחת לרפידות</li>
+              <li>למשוך את המוט/ידית <strong>לגובה הסנטר/עצם החזה</strong> — לא לאחור</li>
+              <li>לסגור שכמות למטה ולפנים בסיום — לא לשרוף טרפז</li>
+              <li>לחזור לאט — 3 שניות חזרה עם שליטה</li>
+              <li>גב נוטה מעט לאחור (10°) — לא ישב זקוף בדיוק 90°</li>
+            </ul>
+            <div class="warn-box elbow">&#x1F9B6; מרפק טניס: אחיזה סגורה/ניטרלית בלבד — Wide Pronated Grip = כאב מרפק</div>
+          </div>
+          <a href="https://www.youtube.com/results?search_query=lat+pulldown+close+grip+neutral+proper+form" target="_blank" class="demo-btn">
+            <div class="play-icon">&#9654;</div>
+            Watch Demo
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUPERSET 3 -->
+  <div class="superset-group">
+    <div class="superset-label">Superset 3 — מנוחה 60 שניות</div>
+
+    <div class="exercise-card" id="card-a5">
+      <div class="exercise-header" onclick="toggleCard('card-a5')">
+        <div class="exercise-num">3A</div>
+        <div class="exercise-main">
+          <div class="exercise-name">
+            פשיטת רגל (מכונה)
+            <span class="exercise-name-en">Seated Leg Extension</span>
+          </div>
+          <div class="exercise-meta">
+            <span class="badge badge-sets">3 × 15</span>
+            <span class="badge badge-muscle">Quads</span>
+          </div>
+        </div>
+        <div class="set-tracker" id="sets-a5" data-total="3"></div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exercise-detail">
+        <div class="detail-grid">
+          <div>
+            <div class="cues-title">דגשים לביצוע</div>
+            <ul class="cues-list">
+              <li>לשבת זקוף, גב מלא על המשענת</li>
+              <li>לדחוף עד ישרות <strong>כמעט</strong> מלאה — עצור 1 שנייה בפסגה</li>
+              <li>קצב: 2 שניות עלייה · 1 שנייה עצירה · 3 שניות ירידה</li>
+              <li>לא להרים ישבן מהמושב</li>
+              <li>כפות רגליים פלקסיה (מושכות כלפי מעלה) לאורך כל התנועה</li>
+            </ul>
+          </div>
+          <a href="https://www.youtube.com/results?search_query=seated+leg+extension+machine+proper+form" target="_blank" class="demo-btn">
+            <div class="play-icon">&#9654;</div>
+            Watch Demo
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="card-a6">
+      <div class="exercise-header" onclick="toggleCard('card-a6')">
+        <div class="exercise-num">3B</div>
+        <div class="exercise-main">
+          <div class="exercise-name">
+            פלאנק סטטי
+            <span class="exercise-name-en">Plank (Static Hold)</span>
+          </div>
+          <div class="exercise-meta">
+            <span class="badge badge-sets">3 × 30 שניות</span>
+            <span class="badge badge-muscle">Core</span>
+            <span class="badge badge-light">בטוח לגב</span>
+          </div>
+        </div>
+        <div class="set-tracker" id="sets-a6" data-total="3"></div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exercise-detail">
+        <div class="detail-grid">
+          <div>
+            <div class="cues-title">דגשים לביצוע</div>
+            <ul class="cues-list">
+              <li>מרפקים <strong>ישר מתחת לכתפיים</strong> — לא קדימה או אחורה</li>
+              <li>גוף ישר כמו קרש — לא לשקוע בגב, לא לרים ישבן</li>
+              <li>בטן מהודקת כאילו עומדים לקבל אגרוף</li>
+              <li>לנשום רגיל — לא לחזיק נשימה</li>
+              <li>מבט לרצפה, צוואר ניטרלי — לא להרים ראש</li>
+            </ul>
+            <div class="warn-box light">&#x2705; בטוח לגב תחתון: פלאנק הוא אחד התרגילים הבטוחים ביותר לגב</div>
+          </div>
+          <a href="https://www.youtube.com/results?search_query=plank+exercise+proper+form+core+tutorial" target="_blank" class="demo-btn">
+            <div class="play-icon">&#9654;</div>
+            Watch Demo
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARDIO A -->
+  <div class="cardio-card">
+    <div class="cardio-icon">&#x1F6B6;</div>
+    <div class="cardio-info">
+      <h4>Treadmill Incline Walk — 10 דקות</h4>
+      <p>קצב 4–5 קמ"ש · שיפוע 5–8% · דופק מטרה: ~120–130 bpm · קצב שבו אפשר לדבר</p>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ==================== WORKOUT B ==================== -->
+<div id="workout-b" class="workout-section">
+
+  <div class="section-header">
+    <div class="section-icon">&#x1F4AA;</div>
+    <div class="section-info">
+      <h2>אימון B — Glutes / Hip Hinge + Chest + Shoulders</h2>
+      <p>3 Supersets | ~35 דקות כוח + 10 דקות קרדיו</p>
+    </div>
+  </div>
+
+  <div class="warmup-box">
+    <h3>&#x26A0;&#xFE0F; חימום מרפק לפני האימון</h3>
+    <ul>
+      <li>10 סיבובי פרק כף יד בכל כיוון (כל יד)</li>
+      <li>מתיחת Forearm Extensor: יד ישרה קדימה, כף יד למטה, משוך 30 שניות כל יד</li>
+      <li>5 דקות אופניים בקצב קל</li>
+    </ul>
+  </div>
+
+  <div class="workout-progress">
+    <span class="progress-text">התקדמות:</span>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="prog-b"></div>
+    </div>
+    <span class="progress-pct" id="prog-b-txt">0%</span>
+  </div>
+
+  <!-- SUPERSET 1 -->
+  <div class="superset-group">
+    <div class="superset-label">Superset 1 — מנוחה 60–75 שניות</div>
+
+    <div class="exercise-card" id="card-b1">
+      <div class="exercise-header" onclick="toggleCard('card-b1')">
+        <div class="exercise-num">1A</div>
+        <div class="exercise-main">
+          <div class="exercise-name">
+            Cable Pull-Through
+            <span class="exercise-name-en">Cable Pull-Through (Glutes)</span>
+          </div>
+          <div class="exercise-meta">
+            <span class="badge badge-sets">3 × 15</span>
+            <span class="badge badge-muscle">Glutes · Hamstrings</span>
+            <span class="badge badge-light">בטוח לגב</span>
+          </div>
+        </div>
+        <div class="set-tracker" id="sets-b1" data-total="3"></div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exercise-detail">
+        <div class="detail-grid">
+          <div>
+            <div class="cues-title">דגשים לביצוע</div>
+            <ul class="cues-list">
+              <li>לעמוד <strong>גב לכבל</strong>, רגליים ברוחב כתפיים+ מהכבל</li>
+              <li>להתכופף מהירכיים — כאילו סוגרים דלת עם הישבן</li>
+              <li>כפות ידיים בין הרגליים, אחיזה בידית הכבל</li>
+              <li>לדחוף ירכיים קדימה בחדות, לסגור גלוטאוס בפסגה</li>
+              <li><strong>הגב נשאר ישר</strong> — לא מתכופפים מהגב!</li>
+            </ul>
+            <div class="warn-box light">&#x2705; בטוח לגב תחתון: תנועה מהירכיים, לא מהעמוד שדרה</div>
+          </div>
+          <a href="https://www.youtube.com/results?search_query=cable+pull+through+glutes+hip+hinge+form" target="_blank" class="demo-btn">
+            <div class="play-icon">&#9654;</div>
+            Watch Demo
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="card-b2">
+      <div class="exercise-header" onclick="toggleCard('card-b2')">
+        <div class="exercise-num">1B</div>
+        <div class="exercise-main">
+          <div class="exercise-name">
+            לחיצת חזה ניטרלית
+            <span class="exercise-name-en">Neutral Grip DB Press (Flat)</span>
+          </div>
+          <div class="exercise-meta">
+            <span class="badge badge-sets">3 × 12</span>
+            <span class="badge badge-muscle">Chest · Triceps</span>
+            <span class="badge badge-elbow">אחיזת פטיש</span>
+          </div>
+        </div>
+        <div class="set-tracker" id="sets-b2" data-total="3"></div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exercise-detail">
+        <div class="detail-grid">
+          <div>
+            <div class="cues-title">דגשים לביצוע</div>
+            <ul class="cues-list">
+              <li><strong>כפות ידיים מול מול (Hammer Grip)</strong> — לא מסובבות החוצה</li>
+              <li>להוריד דמבלים לצדי החזה מבוקר, מרפקים ב-45° מהגוף</li>
+              <li>לא להניח דמבלים בפסגה — מרפק לא נעול</li>
+              <li>שכמות נסגרות ומאוחסנות בגב לאורך כל הסט</li>
+              <li>להרגיש את החזה עושה את העבודה — לא הכתפיים</li>
+            </ul>
+            <div class="warn-box elbow">&#x1F9B6; מרפק טניס: Neutral Grip הוא <strong>חובה</strong> — מפחית לחץ על גיד Lateral Epicondyle</div>
+          </div>
+          <a href="https://www.youtube.com/results?search_query=neutral+grip+dumbbell+bench+press+hammer+grip+form" target="_blank" class="demo-btn">
+            <div class="play-icon">&#9654;</div>
+            Watch Demo
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUPERSET 2 -->
+  <div class="superset-group">
+    <div class="superset-label">Superset 2 — מנוחה 60–75 שניות</div>
+
+    <div class="exercise-card" id="card-b3">
+      <div class="exercise-header" onclick="toggleCard('card-b3')">
+        <div class="exercise-num">2A</div>
+        <div class="exercise-main">
+          <div class="exercise-name">
+            Hip Thrust (Smith Machine)
+            <span class="exercise-name-en">Smith Machine Hip Thrust</span>
+          </div>
+          <div class="exercise-meta">
+            <span class="badge badge-sets">3 × 15</span>
+            <span class="badge badge-muscle">Glutes · Hamstrings</span>
+            <span class="badge badge-light">בטוח לגב</span>
+          </div>
+        </div>
+        <div class="set-tracker" id="sets-b3" data-total="3"></div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exercise-detail">
+        <div class="detail-grid">
+          <div>
+            <div class="cues-title">דגשים לביצוע</div>
+            <ul class="cues-list">
+              <li>גב <strong>עליון</strong> (לא אמצע) נשען על הספסל</li>
+              <li>מוט על ירכיים עם ריפוד — לא על בטן</li>
+              <li>כפות רגליים שטוחות על הרצפה, רגליים מקבילות/מעט פתוחות</li>
+              <li>לדחוף ירכיים עד שהגוף יוצר קו ישר מכתפיים לברכיים</li>
+              <li>לסגור גלוטאוס בפסגה ולעצור שנייה — להרגיש את הכיווץ</li>
+            </ul>
+            <div class="warn-box light">&#x2705; בטוח לגב תחתון: Hip Thrust עובד על גלוטאוס ללא עומס על עמוד שדרה</div>
+          </div>
+          <a href="https://www.youtube.com/results?search_query=smith+machine+hip+thrust+proper+form+tutorial" target="_blank" class="demo-btn">
+            <div class="play-icon">&#9654;</div>
+            Watch Demo
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="card-b4">
+      <div class="exercise-header" onclick="toggleCard('card-b4')">
+        <div class="exercise-num">2B</div>
+        <div class="exercise-main">
+          <div class="exercise-name">
+            לחיצת כתפיים (ישיבה)
+            <span class="exercise-name-en">Seated Dumbbell Shoulder Press</span>
+          </div>
+          <div class="exercise-meta">
+            <span class="badge badge-sets">3 × 12</span>
+            <span class="badge badge-muscle">Shoulders · Triceps</span>
+            <span class="badge badge-elbow">אחיזה ניטרלית אפשרית</span>
+          </div>
+        </div>
+        <div class="set-tracker" id="sets-b4" data-total="3"></div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exercise-detail">
+        <div class="detail-grid">
+          <div>
+            <div class="cues-title">דגשים לביצוע</div>
+            <ul class="cues-list">
+              <li>גב מלא על המשענת הנוטה מעט לאחור (לא 90° מדויק)</li>
+              <li>מרפקים ב-90° בנקודת ההתחלה, ברוחב כתפיים</li>
+              <li>ללחוץ מעלה ומעט קדימה — לא ישר למעלה בדיוק</li>
+              <li>לא לנעול מרפקים בפסגה — להשאיר קצת כיפוף</li>
+              <li>אפשר לסובב לאחיזת פטיש (Neutral) אם יש כאב במרפק</li>
+            </ul>
+            <div class="warn-box elbow">&#x1F9B6; מרפק טניס: אם יש כאב, לעבור לאחיזת פטיש (כפות ידיים מול מול)</div>
+          </div>
+          <a href="https://www.youtube.com/results?search_query=seated+dumbbell+shoulder+press+proper+form" target="_blank" class="demo-btn">
+            <div class="play-icon">&#9654;</div>
+            Watch Demo
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUPERSET 3 -->
+  <div class="superset-group">
+    <div class="superset-label">Superset 3 — מנוחה 60 שניות</div>
+
+    <div class="exercise-card" id="card-b5">
+      <div class="exercise-header" onclick="toggleCard('card-b5')">
+        <div class="exercise-num">3A</div>
+        <div class="exercise-main">
+          <div class="exercise-name">
+            כיפוף רגל שוכב (מכונה)
+            <span class="exercise-name-en">Lying Hamstring Curl</span>
+          </div>
+          <div class="exercise-meta">
+            <span class="badge badge-sets">3 × 15</span>
+            <span class="badge badge-muscle">Hamstrings</span>
+          </div>
+        </div>
+        <div class="set-tracker" id="sets-b5" data-total="3"></div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exercise-detail">
+        <div class="detail-grid">
+          <div>
+            <div class="cues-title">דגשים לביצוע</div>
+            <ul class="cues-list">
+              <li>לשכב שטוח, ירכיים יורדות על הרפידות — לא להרים אותן</li>
+              <li>לכפף מבוקר עד 90°+ — להרגיש את ה-Hamstring מתכווץ</li>
+              <li>לעצור שנייה בפסגה, ואז לחזור לאט — 3 שניות ירידה</li>
+              <li>לא לשרוף גב תחתון — הגב נשאר שטוח</li>
+            </ul>
+          </div>
+          <a href="https://www.youtube.com/results?search_query=lying+hamstring+curl+machine+proper+form" target="_blank" class="demo-btn">
+            <div class="play-icon">&#9654;</div>
+            Watch Demo
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="card-b6">
+      <div class="exercise-header" onclick="toggleCard('card-b6')">
+        <div class="exercise-num">3B</div>
+        <div class="exercise-main">
+          <div class="exercise-name">
+            Dead Bug
+            <span class="exercise-name-en">Dead Bug (Core)</span>
+          </div>
+          <div class="exercise-meta">
+            <span class="badge badge-sets">3 × 10 כל צד</span>
+            <span class="badge badge-muscle">Core · Abs</span>
+            <span class="badge badge-light">בטוח לגב</span>
+          </div>
+        </div>
+        <div class="set-tracker" id="sets-b6" data-total="3"></div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exercise-detail">
+        <div class="detail-grid">
+          <div>
+            <div class="cues-title">דגשים לביצוע</div>
+            <ul class="cues-list">
+              <li>לשכב על הגב, ידיים ישרות לתקרה, ברכיים ב-90°</li>
+              <li><strong>לשטח את הגב לחלוטין לרצפה</strong> — ללא פער בין גב לרצפה</li>
+              <li>להוריד יד שמאל ורגל ימין בו זמנית — לנשוף לאט</li>
+              <li>לחזור לאמה לפני הצד השני</li>
+              <li>לא לתת לגב לעלות מהרצפה — זה הדגש הכי חשוב!</li>
+            </ul>
+            <div class="warn-box light">&#x2705; בטוח לגב תחתון: Dead Bug הוא תרגיל ה-core הבטוח ביותר לגב</div>
+          </div>
+          <a href="https://www.youtube.com/results?search_query=dead+bug+exercise+core+lower+back+safe+form" target="_blank" class="demo-btn">
+            <div class="play-icon">&#9654;</div>
+            Watch Demo
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARDIO B -->
+  <div class="cardio-card">
+    <div class="cardio-icon">&#x1F6B4;</div>
+    <div class="cardio-info">
+      <h4>Stationary Bike — 10 דקות</h4>
+      <p>התנגדות בינונית · ישיבה נוחה · דופק מטרה: ~120–130 bpm · רגליים עושות את העבודה</p>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ==================== WORKOUT C ==================== -->
+<div id="workout-c" class="workout-section">
+
+  <div class="section-header">
+    <div class="section-icon">&#x26A1;</div>
+    <div class="section-info">
+      <h2>אימון C — Full Body Circuit</h2>
+      <p>3 סבבים | 12–15 חזרות | 60 שניות מנוחה בין סבבים</p>
+    </div>
+  </div>
+
+  <div class="circuit-info">
+    <strong>איך לבצע:</strong> לעשות את כל 6 התרגילים ברצף (סבב אחד) ← לנוח 60 שניות ← לחזור 3 פעמים. זה סה"כ 3 סבבים.
+  </div>
+
+  <div class="warmup-box">
+    <h3>&#x26A0;&#xFE0F; חימום מרפק לפני האימון</h3>
+    <ul>
+      <li>10 סיבובי פרק כף יד בכל כיוון (כל יד)</li>
+      <li>מתיחת Forearm Extensor: 30 שניות כל יד</li>
+      <li>5 דקות Elliptical בקצב קל</li>
+    </ul>
+  </div>
+
+  <div class="workout-progress">
+    <span class="progress-text">התקדמות:</span>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="prog-c"></div>
+    </div>
+    <span class="progress-pct" id="prog-c-txt">0%</span>
+  </div>
+
+  <div class="superset-group">
+    <div class="superset-label">Circuit — לבצע את כל התרגילים ברצף × 3 סבבים</div>
+
+    <div class="exercise-card" id="card-c1">
+      <div class="exercise-header" onclick="toggleCard('card-c1')">
+        <div class="exercise-num">1</div>
+        <div class="exercise-main">
+          <div class="exercise-name">
+            Hack Squat (מכונה)
+            <span class="exercise-name-en">Hack Squat Machine</span>
+          </div>
+          <div class="exercise-meta">
+            <span class="badge badge-sets">12 חזרות</span>
+            <span class="badge badge-muscle">Quads · Glutes</span>
+            <span class="badge badge-light">בטוח לגב</span>
+          </div>
+        </div>
+        <div class="set-tracker" id="sets-c1" data-total="3"></div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exercise-detail">
+        <div class="detail-grid">
+          <div>
+            <div class="cues-title">דגשים לביצוע</div>
+            <ul class="cues-list">
+              <li>רגליים ברוחב כתפיים או קצת יותר רחב</li>
+              <li>כתפיים ודחיפה גב על הרפידות לאורך כל התנועה</li>
+              <li>לרדת לאט עד זווית 90°+ בברך</li>
+              <li>לא לנעול ברכיים בלחיצה</li>
+              <li>הברכיים תמיד בכיוון האצבעות — לא מתמוטטות פנימה</li>
+            </ul>
+            <div class="warn-box light">&#x2705; בטוח לגב תחתון: Hack Squat = גב נתמך לחלוטין</div>
+          </div>
+          <a href="https://www.youtube.com/results?search_query=hack+squat+machine+proper+form+tutorial" target="_blank" class="demo-btn">
+            <div class="play-icon">&#9654;</div>
+            Watch Demo
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="card-c2">
+      <div class="exercise-header" onclick="toggleCard('card-c2')">
+        <div class="exercise-num">2</div>
+        <div class="exercise-main">
+          <div class="exercise-name">
+            לחיצת חזה שיפועית ניטרלית
+            <span class="exercise-name-en">Neutral Grip Incline DB Press</span>
+          </div>
+          <div class="exercise-meta">
+            <span class="badge badge-sets">12 חזרות</span>
+            <span class="badge badge-muscle">Upper Chest</span>
+            <span class="badge badge-elbow">אחיזת פטיש</span>
+          </div>
+        </div>
+        <div class="set-tracker" id="sets-c2" data-total="3"></div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exercise-detail">
+        <div class="detail-grid">
+          <div>
+            <div class="cues-title">דגשים לביצוע</div>
+            <ul class="cues-list">
+              <li>ספסל ב-30–45°, לא יותר — גבוה מזה = כתפיים עושות את העבודה</li>
+              <li><strong>אחיזת פטיש כל האימון</strong> — כפות ידיים מול מול</li>
+              <li>להוריד לגובה עצם החזה העליונה, מרפקים ב-45° מהגוף</li>
+              <li>ללחוץ תוך איחוד שכמות בגב</li>
+              <li>לא לנעול מרפקים בפסגה</li>
+            </ul>
+            <div class="warn-box elbow">&#x1F9B6; מרפק טניס: Neutral Grip = כמעט ללא עומס על Lateral Epicondyle</div>
+          </div>
+          <a href="https://www.youtube.com/results?search_query=neutral+grip+incline+dumbbell+press+form+tutorial" target="_blank" class="demo-btn">
+            <div class="play-icon">&#9654;</div>
+            Watch Demo
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="card-c3">
+      <div class="exercise-header" onclick="toggleCard('card-c3')">
+        <div class="exercise-num">3</div>
+        <div class="exercise-main">
+          <div class="exercise-name">
+            Face Pull (כבל)
+            <span class="exercise-name-en">Cable Face Pull</span>
+          </div>
+          <div class="exercise-meta">
+            <span class="badge badge-sets">15 חזרות</span>
+            <span class="badge badge-muscle">Rear Delt · Rotator Cuff</span>
+          </div>
+        </div>
+        <div class="set-tracker" id="sets-c3" data-total="3"></div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exercise-detail">
+        <div class="detail-grid">
+          <div>
+            <div class="cues-title">דגשים לביצוע</div>
+            <ul class="cues-list">
+              <li>כבל בגובה העיניים, לעמוד בריחוק מספיק</li>
+              <li>אחיזה בחבל (Rope) — אחיזה ניטרלית טבעית</li>
+              <li>למשוך <strong>כלפי פנים הפנים</strong> — מרפקים גבוהים ולצדדים</li>
+              <li>לעצור שנייה בסיום — להרגיש את הכתף האחורית</li>
+              <li>לא למשוך לצוואר — למשוך לגובה האפיים</li>
+            </ul>
+          </div>
+          <a href="https://www.youtube.com/results?search_query=cable+face+pull+rear+delt+proper+form+tutorial" target="_blank" class="demo-btn">
+            <div class="play-icon">&#9654;</div>
+            Watch Demo
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="card-c4">
+      <div class="exercise-header" onclick="toggleCard('card-c4')">
+        <div class="exercise-num">4</div>
+        <div class="exercise-main">
+          <div class="exercise-name">
+            Romanian Deadlift — דמבלים קלים
+            <span class="exercise-name-en">Dumbbell Romanian Deadlift (Light)</span>
+          </div>
+          <div class="exercise-meta">
+            <span class="badge badge-sets">12 חזרות</span>
+            <span class="badge badge-muscle">Hamstrings · Glutes</span>
+            <span class="badge badge-warn">משקל קל בלבד!</span>
+          </div>
+        </div>
+        <div class="set-tracker" id="sets-c4" data-total="3"></div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exercise-detail">
+        <div class="detail-grid">
+          <div>
+            <div class="cues-title">דגשים לביצוע</div>
+            <ul class="cues-list">
+              <li>דמבלים לפני הירכיים, כפות ידיים פנימה (Neutral)</li>
+              <li>להתכופף <strong>מהירכיים</strong> — כאילו דוחפים את הישבן לאחור</li>
+              <li>גב ישר ומתוח לאורך כל התנועה — לא לכופף!</li>
+              <li>לרדת עד שמרגישים מתיחה בירך האחורית (Hamstring)</li>
+              <li>לחזור מהירכיים — לא מהגב</li>
+            </ul>
+            <div class="warn-box back">&#x26A0;&#xFE0F; גב תחתון: <strong>משקל קל מאוד!</strong> לשלוט בכל ס"מ. כאב = עוצרים</div>
+          </div>
+          <a href="https://www.youtube.com/results?search_query=dumbbell+romanian+deadlift+form+light+weight+tutorial" target="_blank" class="demo-btn">
+            <div class="play-icon">&#9654;</div>
+            Watch Demo
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="card-c5">
+      <div class="exercise-header" onclick="toggleCard('card-c5')">
+        <div class="exercise-num">5</div>
+        <div class="exercise-main">
+          <div class="exercise-name">
+            משיכת כבל (אחיזה סגורה)
+            <span class="exercise-name-en">Lat Pulldown — Close Grip</span>
+          </div>
+          <div class="exercise-meta">
+            <span class="badge badge-sets">12 חזרות</span>
+            <span class="badge badge-muscle">Lats · Biceps</span>
+            <span class="badge badge-elbow">אחיזה ניטרלית</span>
+          </div>
+        </div>
+        <div class="set-tracker" id="sets-c5" data-total="3"></div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exercise-detail">
+        <div class="detail-grid">
+          <div>
+            <div class="cues-title">דגשים לביצוע</div>
+            <ul class="cues-list">
+              <li>אחיזה סגורה ניטרלית — ידיים קרובות</li>
+              <li>למשוך לגובה הסנטר / עצם החזה</li>
+              <li>לסגור שכמות למטה בסיום — לא לכווץ טרפז</li>
+              <li>לחזור לאט — 3 שניות עם שליטה מלאה</li>
+            </ul>
+            <div class="warn-box elbow">&#x1F9B6; מרפק טניס: אחיזה ניטרלית סגורה בלבד — Wide Grip = כאב</div>
+          </div>
+          <a href="https://www.youtube.com/results?search_query=close+grip+lat+pulldown+neutral+form+tutorial" target="_blank" class="demo-btn">
+            <div class="play-icon">&#9654;</div>
+            Watch Demo
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="card-c6">
+      <div class="exercise-header" onclick="toggleCard('card-c6')">
+        <div class="exercise-num">6</div>
+        <div class="exercise-main">
+          <div class="exercise-name">
+            Pallof Press (כבל)
+            <span class="exercise-name-en">Pallof Press — Anti-Rotation Core</span>
+          </div>
+          <div class="exercise-meta">
+            <span class="badge badge-sets">12 כל צד</span>
+            <span class="badge badge-muscle">Core · Obliques</span>
+            <span class="badge badge-light">בטוח לגב</span>
+          </div>
+        </div>
+        <div class="set-tracker" id="sets-c6" data-total="3"></div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exercise-detail">
+        <div class="detail-grid">
+          <div>
+            <div class="cues-title">דגשים לביצוע</div>
+            <ul class="cues-list">
+              <li>לעמוד <strong>צדדית</strong> לכבל, רגליים ברוחב כתפיים</li>
+              <li>לאחוז ידית בגובה החזה עם <strong>שתי ידיים</strong></li>
+              <li>לדחוף ידיים ישר קדימה — <strong>לא לאפשר לגוף להסתובב!</strong></li>
+              <li>לעצור 2 שניות מלא, ואז לחזור לחזה</li>
+              <li>הגוף כולו עומד נגד הכבל — הcore עובד קשה</li>
+            </ul>
+            <div class="warn-box light">&#x2705; בטוח לגב תחתון: Anti-rotation הוא הבטוח ביותר לגב — ללא כיפוף/פיתול</div>
+          </div>
+          <a href="https://www.youtube.com/results?search_query=pallof+press+cable+anti+rotation+core+form" target="_blank" class="demo-btn">
+            <div class="play-icon">&#9654;</div>
+            Watch Demo
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARDIO C -->
+  <div class="cardio-card">
+    <div class="cardio-icon">&#x1F3C3;</div>
+    <div class="cardio-info">
+      <h4>Elliptical — 10 דקות</h4>
+      <p>ללא עומס על מפרקים · קצב נוח · דופק מטרה: ~120–130 bpm · ידיים פסיביות</p>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- REST TIMER FAB -->
+<div class="timer-fab">
+  <button class="timer-btn" id="timerBtn" onclick="toggleTimer()">
+    <svg class="timer-ring" viewBox="0 0 60 60">
+      <circle class="timer-ring-circle" id="timerRing" cx="30" cy="30" r="28"/>
+    </svg>
+    <span class="timer-display" id="timerDisplay">60</span>
+    <span class="timer-label-text">REST</span>
+  </button>
+  <span class="timer-hint" id="timerHint">לחץ לתחילת מנוחה</span>
+</div>
+
+
+<script>
+// ===== TABS =====
+function switchTab(tab) {
+  document.querySelectorAll('.workout-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('workout-' + tab).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ===== EXERCISE ACCORDION =====
+function toggleCard(id) {
+  const card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+
+// ===== SET TRACKER =====
+function buildSetTrackers() {
+  document.querySelectorAll('.set-tracker').forEach(tracker => {
+    const total = parseInt(tracker.dataset.total);
+    const cardId = tracker.id.replace('sets-', 'card-');
+    for (let i = 1; i <= total; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'set-dot';
+      dot.title = 'סט ' + i;
+      dot.textContent = '✓';
+      dot.onclick = (e) => {
+        e.stopPropagation();
+        dot.classList.toggle('done');
+        updateProgress();
+      };
+      tracker.appendChild(dot);
+    }
+  });
+}
+
+// ===== PROGRESS =====
+function updateProgress() {
+  ['a','b','c'].forEach(tab => {
+    const section = document.getElementById('workout-' + tab);
+    const all  = section.querySelectorAll('.set-dot').length;
+    const done = section.querySelectorAll('.set-dot.done').length;
+    const pct  = all > 0 ? Math.round(done / all * 100) : 0;
+    const bar  = document.getElementById('prog-' + tab);
+    const txt  = document.getElementById('prog-' + tab + '-txt');
+    if (bar) bar.style.width = pct + '%';
+    if (txt) txt.textContent = pct + '%';
+  });
+}
+
+// ===== REST TIMER =====
+let timerInterval = null;
+let timerRunning = false;
+let timerSeconds = 60;
+const TIMER_MAX = 60;
+const CIRCUMFERENCE = 175;
+
+function toggleTimer() {
+  if (timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    timerSeconds = TIMER_MAX;
+    document.getElementById('timerDisplay').textContent = TIMER_MAX;
+    document.getElementById('timerHint').textContent = 'לחץ לתחילת מנוחה';
+    const ring = document.getElementById('timerRing');
+    ring.classList.remove('running');
+    ring.style.strokeDashoffset = CIRCUMFERENCE;
+  } else {
+    timerRunning = true;
+    timerSeconds = TIMER_MAX;
+    document.getElementById('timerHint').textContent = 'לחץ לביטול';
+    const ring = document.getElementById('timerRing');
+    ring.classList.add('running');
+    timerInterval = setInterval(() => {
+      timerSeconds--;
+      document.getElementById('timerDisplay').textContent = timerSeconds;
+      const progress = (TIMER_MAX - timerSeconds) / TIMER_MAX;
+      ring.style.strokeDashoffset = CIRCUMFERENCE * (1 - progress);
+      if (timerSeconds <= 0) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        document.getElementById('timerDisplay').textContent = 'GO!';
+        document.getElementById('timerHint').textContent = 'לחץ לתחילת מנוחה';
+        ring.classList.remove('running');
+        ring.style.strokeDashoffset = CIRCUMFERENCE;
+        timerSeconds = TIMER_MAX;
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      }
+    }, 1000);
+  }
+}
+
+// ===== INIT =====
+buildSetTrackers();
+updateProgress();
+</script>
+</body>
+</html>
